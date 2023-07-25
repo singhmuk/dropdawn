@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from 'axios';
 import Edit from "./edit.js";
 
+import {BASE_URL} from "./helper"
+
 //Radio
 const countries = [
   { id: 1, name: 'India' },
@@ -27,19 +29,19 @@ const App = () => {
   }, [user])
 
   const fatchData = async () => {
-    await axios.get('/api/items')
-      .then(res => res.data)
-      .then(data => setMocks(data))
+    const res = await axios.get(`${BASE_URL}/api/items`)
+      setMocks(res.data);
+      console.log('res',res)
   }
 
   const handleAdd = async () => {
-    await axios.post('/api/items', user);
+    await axios.post(`${BASE_URL}/api/items`, user);
     setMocks([...mocks, user]);
     setUser(formState)
   }
 
   const handleRemove =async (_id) => {
-    await axios.delete(`/api/items/${_id}`)
+    await axios.delete(`${BASE_URL}/api/items/${_id}`)
     setMocks(mocks.filter(item => item._id !== _id))
   }
 
@@ -50,7 +52,7 @@ const App = () => {
 
   const handleUpdate = async (_id, updates) => {
     setEditing(false);
-    const res = await axios.put(`/api/items/${_id}`, updates)
+    const res = await axios.put(`${BASE_URL}/api/items/${_id}`, updates)
     setMocks(mocks.map(item => (item._id === _id ? res.data : item)));
   }
 
